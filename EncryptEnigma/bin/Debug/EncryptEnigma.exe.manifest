@@ -42,14 +42,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="EncryptEnigma.exe" size="25600">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="EncryptEnigma.exe" size="29696">
       <assemblyIdentity name="EncryptEnigma" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>79B4gbkDbdDAlvI37JoveCOIaWlg97vNracF3E3R9Z0=</dsig:DigestValue>
+        <dsig:DigestValue>aCljHoG5dn9KdXiOr5fn5IWuqH/o/AWW5PEMo69ksWQ=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

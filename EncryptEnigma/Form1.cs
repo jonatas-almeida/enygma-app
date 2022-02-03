@@ -59,6 +59,7 @@ namespace EncryptEnigma
             byte[] Lenk = new byte[4];
             byte[] LenIV = new byte[4];
 
+            // Verifica se o diretório existe, caso não exista ele cria
             if (!Directory.Exists(EncrFolder))
             {
                 Directory.CreateDirectory(EncrFolder);
@@ -307,7 +308,7 @@ namespace EncryptEnigma
         }
 
         //EXPORTAR A CHAVE PÚBLICA
-        private void Button2_Click(object sender, EventArgs e)
+        private async Task Button2_Click(object sender, EventArgs e)
         {
             
         }
@@ -588,6 +589,7 @@ namespace EncryptEnigma
             cspp.KeyContainerName = keyName;
             rsa = new RSACryptoServiceProvider(cspp);
             rsa.PersistKeyInCsp = true;
+
             if (rsa.PublicOnly == true)
             {
                 label1.Text = "KEY PÚBLICA GERADA COM SUCESSO";
@@ -601,17 +603,47 @@ namespace EncryptEnigma
             }
         }
 
-        private void Button2_Click_1(object sender, EventArgs e)
+        // Exporta a chave pública para ser utilizada posteriormente
+        private async void Button2_Click_1(object sender, EventArgs e)
         {
-            Directory.CreateDirectory(KeysFolder);
-            StreamWriter sw = new StreamWriter(PubKeyFile, false);
-            sw.Write(rsa.ToXmlString(false));
-            sw.Close();
+            if (rsa != null)
+            {
+                // Verifica se o diretório existe, se não existir ele cria
+                if (!Directory.Exists(KeysFolder))
+                {
+                    Directory.CreateDirectory(KeysFolder);
+                }
 
-            MessageBox.Show("Chave pública exportada com sucesso!");
+                // Abre a janela para selecionar onde o arquivo será salvo, como padrão ele abre o diretório 'Keys'
+                using (SaveFileDialog sfd = new SaveFileDialog()
+                {
+                    Filter = "Text |* .txt",
+                    InitialDirectory = KeysFolder,
+                    FileName = "PublicKey" + DateTime.Now.Millisecond.ToString() + ".txt",
+                })
+
+                // Caso o botão clicado seja o de 'OK' ele salva o arquivo, se for o 'Cancelar' ele fecha o Dialog
+                if (sfd.ShowDialog() ==  DialogResult.OK)
+                {
+                    using (TextWriter tw = new StreamWriter(new FileStream(sfd.FileName, FileMode.Create), Encoding.UTF8))
+                    {
+                       await tw.WriteLineAsync(rsa.ToXmlString(true)); // Escreve no arquivo
+                    }
+
+                       MessageBox.Show("Chave pública exportada com sucesso");
+                    }
+
+                }
+                else
+                {
+                    MessageBox.Show("Gere a chave pública antes");
+                }
         }
 
-        private void Button3_Click_2(object sender, EventArgs e)
+        // Importar chave pública (Precisa de melhoria)
+        // ---------------------------------------------
+        // MELHORIA - Necessita que o usuário escolha uma chave que já foi exportada, e não uma pré-definida no código
+        private async void Button3_Click_2(object sender, EventArgs e)
         {
             StreamReader sr = new StreamReader(PubKeyFile);
             cspp.KeyContainerName = keyName;
@@ -626,7 +658,6 @@ namespace EncryptEnigma
                 label1.Text = "Key: " + cspp.KeyContainerName + " - Public Only";
                 label2.Visible = false;
             }
-
             else
             {
                 label1.Text = "Key: " + cspp.KeyContainerName + " - Full Key";
