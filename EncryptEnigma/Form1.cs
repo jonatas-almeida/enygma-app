@@ -627,7 +627,7 @@ namespace EncryptEnigma
                 {
                     using (TextWriter tw = new StreamWriter(new FileStream(sfd.FileName, FileMode.Create), Encoding.UTF8))
                     {
-                       await tw.WriteLineAsync(rsa.ToXmlString(true));
+                       await tw.WriteLineAsync(rsa.ToXmlString(true)); // Escreve no arquivo
                     }
 
                        MessageBox.Show("Chave pública exportada com sucesso");
@@ -640,7 +640,10 @@ namespace EncryptEnigma
                 }
         }
 
-        private void Button3_Click_2(object sender, EventArgs e)
+        // Importar chave pública (Precisa de melhoria)
+        // ---------------------------------------------
+        // MELHORIA - Necessita que o usuário escolha uma chave que já foi exportada, e não uma pré-definida no código
+        private async void Button3_Click_2(object sender, EventArgs e)
         {
             StreamReader sr = new StreamReader(PubKeyFile);
             cspp.KeyContainerName = keyName;
@@ -655,7 +658,6 @@ namespace EncryptEnigma
                 label1.Text = "Key: " + cspp.KeyContainerName + " - Public Only";
                 label2.Visible = false;
             }
-
             else
             {
                 label1.Text = "Key: " + cspp.KeyContainerName + " - Full Key";
